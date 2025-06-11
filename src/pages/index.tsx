@@ -2,14 +2,14 @@ import { Car, DollarSign, MapPin, Navigation, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
 const calculateDistance = (top: number, left: number): number => {
-  return Math.floor(Math.sqrt(
+  return 13 * Math.floor(Math.sqrt(
     Math.pow(top - 40, 2) + Math.pow(left - 50, 2)
   ));
 };
 
 
 const generateMockParkingData = (): ParkingLot[] => {
-  const lots: ParkingLot[] = [
+  const baseLots  = [
     {
       id: "1",
       name: "Downtown Plaza",
@@ -21,7 +21,6 @@ const generateMockParkingData = (): ParkingLot[] => {
       pricePerHour: 3.5,
       top: 23,
       left: 15,
-      distance: 500,
     },
     {
       id: "2",
@@ -34,7 +33,6 @@ const generateMockParkingData = (): ParkingLot[] => {
       pricePerHour: 4.0,
       top: 10,
       left: 54,
-      distance: 200,
     },
     {
       id: "3",
@@ -47,7 +45,6 @@ const generateMockParkingData = (): ParkingLot[] => {
       pricePerHour: 2.75,
       top: 39,
       left: 29,
-      distance: 320,
     },
     {
       id: "4",
@@ -60,7 +57,6 @@ const generateMockParkingData = (): ParkingLot[] => {
       pricePerHour: 3.25,
       top: 59,
       left: 78,
-      distance: 450,
     },
     {
       id: "5",
@@ -73,7 +69,6 @@ const generateMockParkingData = (): ParkingLot[] => {
       pricePerHour: 5.0,
       top: 61,
       left: 43,
-      distance: 180,
     },
     {
       id: "6",
@@ -86,9 +81,13 @@ const generateMockParkingData = (): ParkingLot[] => {
       pricePerHour: 2.0,
       top: 40,
       left: 70,
-      distance: 350,
     },
   ];
+
+  const lots: ParkingLot[] = baseLots.map((lot) => ({
+    ...lot,
+    distance: calculateDistance(lot.top, lot.left),
+  }));
 
   return lots;
 };
@@ -335,12 +334,6 @@ const Index = () => {
                 </div>
               ))}
 
-              {/* Map Controls */}
-              <div className="absolute top-4 right-4 z-30 space-y-2">
-                <button className="w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors">
-                  <Navigation className="h-5 w-5 text-gray-700" />
-                </button>
-              </div>
 
               {/* Loading Overlay */}
               {isLoading && (
@@ -453,7 +446,7 @@ const Index = () => {
               />
 
               {/* Modal */}
-              <div className="relative w-full max-w-md bg-white rounded-t-3xl shadow-2xl animate-slide-in-right">
+              <div className="relative w-full max-w-md bg-white rounded-3xl shadow-2xl animate-slide-in-right">
                 {/* Header */}
                 <div className="flex items-center justify-between p-6 border-b border-gray-200">
                   <div className="flex items-center space-x-3">
@@ -564,16 +557,6 @@ const Index = () => {
                         </p>
                       </div>
                     </div>
-                  </div>
-
-                  {/* Action Buttons */}
-                  <div className="space-y-3">
-                    <button className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors active:scale-95 transform">
-                      Navigate to Parking
-                    </button>
-                    <button className="w-full bg-gray-100 text-gray-900 py-3 rounded-lg font-medium hover:bg-gray-200 transition-colors active:scale-95 transform">
-                      Reserve Spot
-                    </button>
                   </div>
                 </div>
               </div>
