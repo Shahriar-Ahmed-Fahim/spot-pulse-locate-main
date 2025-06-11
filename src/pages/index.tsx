@@ -1,6 +1,13 @@
 import { Car, DollarSign, MapPin, Navigation, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
+const calculateDistance = (top: number, left: number): number => {
+  return Math.floor(Math.sqrt(
+    Math.pow(top - 40, 2) + Math.pow(left - 50, 2)
+  ));
+};
+
+
 const generateMockParkingData = (): ParkingLot[] => {
   const lots: ParkingLot[] = [
     {
@@ -12,7 +19,9 @@ const generateMockParkingData = (): ParkingLot[] => {
       availableSpaces: 45,
       status: ParkingStatus.AVAILABLE,
       pricePerHour: 3.5,
-      distance: 150,
+      top: 23,
+      left: 15,
+      distance: 500,
     },
     {
       id: "2",
@@ -23,6 +32,8 @@ const generateMockParkingData = (): ParkingLot[] => {
       availableSpaces: 12,
       status: ParkingStatus.LIMITED,
       pricePerHour: 4.0,
+      top: 10,
+      left: 54,
       distance: 200,
     },
     {
@@ -34,6 +45,8 @@ const generateMockParkingData = (): ParkingLot[] => {
       availableSpaces: 0,
       status: ParkingStatus.FULL,
       pricePerHour: 2.75,
+      top: 39,
+      left: 29,
       distance: 320,
     },
     {
@@ -45,7 +58,9 @@ const generateMockParkingData = (): ParkingLot[] => {
       availableSpaces: 78,
       status: ParkingStatus.AVAILABLE,
       pricePerHour: 3.25,
-      distance: 180,
+      top: 59,
+      left: 78,
+      distance: 450,
     },
     {
       id: "5",
@@ -56,7 +71,9 @@ const generateMockParkingData = (): ParkingLot[] => {
       availableSpaces: 23,
       status: ParkingStatus.LIMITED,
       pricePerHour: 5.0,
-      distance: 280,
+      top: 61,
+      left: 43,
+      distance: 180,
     },
     {
       id: "6",
@@ -67,7 +84,9 @@ const generateMockParkingData = (): ParkingLot[] => {
       availableSpaces: 156,
       status: ParkingStatus.AVAILABLE,
       pricePerHour: 2.0,
-      distance: 450,
+      top: 40,
+      left: 70,
+      distance: 350,
     },
   ];
 
@@ -143,6 +162,8 @@ interface ParkingLot {
   status: ParkingStatus;
   pricePerHour: number;
   distance: number;
+  top: number;
+  left: number;
 }
 
 // interface ParkingData {
@@ -153,25 +174,6 @@ interface ParkingLot {
 const Index = () => {
   const [selectedLot, setSelectedLot] = useState<ParkingLot | null>(null);
   const { parkingLots, isLoading } = useParkingData();
-  // const [userLocation, setUserLocation] = useState({
-  //   lat: 37.7749,
-  //   lng: -122.4194,
-  // });
-
-  // useEffect(() => {
-  //   // Simulate getting user location
-  //   navigator.geolocation?.getCurrentPosition(
-  //     (position) => {
-  //       setUserLocation({
-  //         lat: position.coords.latitude,
-  //         lng: position.coords.longitude,
-  //       });
-  //     },
-  //     () => {
-  //       console.log("Location access denied, using default location");
-  //     }
-  //   );
-  // }, []);
 
   const handleMarkerClick = (lot: ParkingLot) => {
     setSelectedLot(lot);
@@ -272,8 +274,8 @@ const Index = () => {
                   key={index}
                   className="absolute transform -translate-x-1/2 -translate-y-1/2 z-20 cursor-pointer"
                   style={{
-                    left: `${20 + (index % 4) * 20}%`,
-                    top: `${30 + Math.floor(index / 4) * 25}%`,
+                    left: `${lot.left}%`,
+                    top: `${lot.top}%`,
                   }}
                   onClick={() => handleMarkerClick(lot)}
                 >
@@ -357,7 +359,7 @@ const Index = () => {
           </div>
 
           {/* Legend */}
-          <div className="absolute bottom-24 left-4 z-30 bg-white rounded-lg shadow-lg p-4">
+          <div className="absolute bottom-3 md:bottom-24 left-4 z-30 bg-white rounded-lg shadow-lg p-4">
             <h3 className="text-sm font-medium text-gray-900 mb-2">
               Availability
             </h3>
